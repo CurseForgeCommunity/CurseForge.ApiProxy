@@ -38,6 +38,8 @@ app.Map("/{**catchAll}", async (HttpContext context) =>
         "Content-Type"
     };
 
+    requestMessage.Headers.TryAddWithoutValidation("X-Forwarded-For", context.Connection.RemoteIpAddress?.ToString());
+
     foreach (var requestsHeader in context.Request.Headers)
     {
         if (ignoredHeaders.Contains(requestsHeader.Key))
