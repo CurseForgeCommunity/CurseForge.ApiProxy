@@ -1,6 +1,5 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 var proxyPort = Environment.GetEnvironmentVariable("CFPROXY_PORT", EnvironmentVariableTarget.Process) ?? "36000";
-
 var cfApiKey = Environment.GetEnvironmentVariable("CFPROXY_APIKEY", EnvironmentVariableTarget.Process);
 
 if (cfApiKey == null)
@@ -30,12 +29,45 @@ app.Map("/{**catchAll}", async (HttpContext context) =>
         Content = new StreamContent(ms),
     };
 
-    requestMessage.Headers.TryAddWithoutValidation("Content-Type", "application/json");
+    requestMessage.Content?.Headers.TryAddWithoutValidation("Content-Type", context.Request.ContentType);
+
+    var ignoredHeaders = new[]
+    {
+        "Host",
+        "Accept-Encoding",
+        "Content-Type"
+    };
+
+    foreach (var requestsHeader in context.Request.Headers)
+    {
+        if (ignoredHeaders.Contains(requestsHeader.Key))
+        {
+            continue;
+        }
+
+        if (!requestMessage.Headers.TryAddWithoutValidation(requestsHeader.Key, requestsHeader.Value.ToArray()))
+        {
+            requestMessage.Content?.Headers.TryAddWithoutValidation(cfApiKey, requestsHeader.Value.ToArray());
+        }
+    }
+
     requestMessage.Content?.Headers.TryAddWithoutValidation("Content-Type", "application/json");
 
     var result = await client.SendAsync(requestMessage);
     context.Response.StatusCode = (int)result.StatusCode;
-    context.Response.ContentType = "application/json";
+    context.Response.ContentType = result.Content.Headers.ContentType?.MediaType ?? "application/json";
+
+    result.Headers.Remove("Transfer-Encoding");
+
+    foreach (var header in result.Headers)
+    {
+        context.Response.Headers[header.Key] = header.Value.ToArray();
+    }
+
+    foreach (var header in result.Content.Headers)
+    {
+        context.Response.Headers[header.Key] = header.Value.ToArray();
+    }
 
     await context.Response.WriteAsync(await result.Content.ReadAsStringAsync());
 });
