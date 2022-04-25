@@ -18,7 +18,7 @@ And if you have a personal API key, then these are the ToS/ToC: [CF Core Terms o
 
 ### I have the Unique Application Key, can I use this?
 
-No, don't use this project, as this breaks the [ToS (section 3)[https://support.curseforge.com/en/support/solutions/articles/9000207405-curse-forge-3rd-party-api-terms-and-conditions#Restrictions-and-Obligations-of-Developer)
+No, don't use this project, as this breaks the [ToS (section 3)](https://support.curseforge.com/en/support/solutions/articles/9000207405-curse-forge-3rd-party-api-terms-and-conditions#Restrictions-and-Obligations-of-Developer)
 
 > Developer shall not, and shall not allow any third party, to (a) copy, sublicense, adapt, modify the Platform, Platform API and/or any SDK; (b) rent, lease, modify, copy, loan, transfer, sublicense, distribute or create derivative works of the Platform, Platform API and/or any SDK; (c) disassemble, reverse engineer, attempt to find the underlying code of, or decompile the Platform, Platform API and/or any SDK; (d) circumvent any security mechanisms of the Platform, Platform API and/or any SDK; or (d) remove or obscure any copyright or other notices from the Platform, Platform API and/or any SDK, (e) conceal your identity or geographic location when accessing the API, **including accessing the API through a proxy server or VPN**;  or (e) save or cache any data obtained through the API or SDK.
 
